@@ -3,25 +3,305 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Alkebulan — Unencumbered Communications for Every Soul on Earth.">
   <title>Alkebulan</title>
+
   <style>
-    html, body {
-      width: 100%;
-      height: 100%;
+    :root {
+      color-scheme: dark;
+      --panel: rgba(0, 0, 0, 0.58);
+      --panel-strong: rgba(0, 0, 0, 0.78);
+      --text-soft: rgba(255, 255, 255, 0.82);
+      --border: rgba(255, 255, 255, 0.38);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
       margin: 0;
       background: #000;
+      color: #fff;
+      font-family: Arial, Helvetica, sans-serif;
     }
-    body {
-      display: grid;
-      place-items: center;
+
+    a {
+      color: inherit;
+    }
+
+    .site-header {
+      position: fixed;
+      inset: 0 0 auto 0;
+      z-index: 20;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 1rem clamp(1rem, 4vw, 3rem);
+      background: linear-gradient(to bottom, rgba(0, 0, 0, 0.78), transparent);
+      pointer-events: none;
+    }
+
+    .brand,
+    .header-link {
+      pointer-events: auto;
+    }
+
+    .brand {
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(1rem, 2vw, 1.35rem);
+      font-weight: 700;
+      letter-spacing: 0.09em;
+      text-decoration: none;
+      text-transform: uppercase;
+      text-shadow: 0 2px 12px #000;
+    }
+
+    .header-link {
+      padding: 0.55rem 0.9rem;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      background: rgba(0, 0, 0, 0.36);
+      font-size: 0.85rem;
+      text-decoration: none;
+      backdrop-filter: blur(5px);
+    }
+
+    .slideshow {
+      position: relative;
+      min-height: 100svh;
       overflow: hidden;
+      isolation: isolate;
+      background: #000;
     }
-    img {
+
+    .slide {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: end center;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 1s ease, visibility 1s ease;
+    }
+
+    .slide.is-active {
+      opacity: 1;
+      visibility: visible;
+      z-index: 1;
+    }
+
+    .slide img {
+      position: absolute;
+      inset: 0;
+      z-index: -3;
       width: 100%;
       height: 100%;
-      object-fit: contain;
+      object-fit: cover;
+      object-position: center;
+      transform: scale(1.01);
     }
-  #visitor-box {
+
+    .slide::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: -2;
+      background:
+        linear-gradient(to bottom,
+          rgba(0, 0, 0, 0.16) 0%,
+          rgba(0, 0, 0, 0.06) 44%,
+          rgba(0, 0, 0, 0.82) 100%);
+    }
+
+    .slide::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      background: radial-gradient(circle at center, transparent 20%, rgba(0, 0, 0, 0.18) 100%);
+    }
+
+    .copy {
+      width: min(950px, calc(100% - 2rem));
+      margin: 0 auto;
+      padding: 7rem 1rem 7.5rem;
+      text-align: center;
+      text-shadow: 0 3px 20px rgba(0, 0, 0, 0.95);
+    }
+
+    .kicker {
+      margin: 0 0 0.75rem;
+      font-size: clamp(0.75rem, 1.3vw, 0.95rem);
+      font-weight: 700;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+    }
+
+    h1,
+    h2 {
+      margin: 0;
+      font-family: Georgia, "Times New Roman", serif;
+      line-height: 0.98;
+    }
+
+    h1 {
+      font-size: clamp(2.7rem, 8vw, 7rem);
+    }
+
+    .slide h2 {
+      font-size: clamp(2.3rem, 7vw, 6.2rem);
+    }
+
+    .lead {
+      max-width: 760px;
+      margin: 1rem auto 1.6rem;
+      color: var(--text-soft);
+      font-size: clamp(1rem, 2vw, 1.28rem);
+      line-height: 1.62;
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.8rem;
+    }
+
+    .button {
+      display: inline-block;
+      padding: 0.82rem 1.3rem;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      background: rgba(0, 0, 0, 0.54);
+      font-weight: 700;
+      letter-spacing: 0.035em;
+      text-decoration: none;
+      backdrop-filter: blur(6px);
+    }
+
+    .button:hover,
+    .button:focus-visible,
+    .header-link:hover,
+    .header-link:focus-visible {
+      background: #fff;
+      color: #000;
+      outline: none;
+    }
+
+    .controls {
+      position: absolute;
+      right: 0;
+      bottom: 1.2rem;
+      left: 0;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.7rem;
+      padding: 0 1rem;
+    }
+
+    .control-button,
+    .dot {
+      border: 1px solid var(--border);
+      color: #fff;
+      background: rgba(0, 0, 0, 0.55);
+      cursor: pointer;
+      backdrop-filter: blur(5px);
+    }
+
+    .control-button {
+      min-width: 2.6rem;
+      min-height: 2.6rem;
+      border-radius: 999px;
+      font-size: 1rem;
+    }
+
+    .dots {
+      display: flex;
+      gap: 0.5rem;
+      padding: 0.65rem 0.8rem;
+      border-radius: 999px;
+      background: rgba(0, 0, 0, 0.4);
+    }
+
+    .dot {
+      width: 0.78rem;
+      height: 0.78rem;
+      padding: 0;
+      border-radius: 50%;
+    }
+
+    .dot[aria-current="true"] {
+      background: #fff;
+      transform: scale(1.16);
+    }
+
+    .mission {
+      background: #090909;
+      border-top: 1px solid #242424;
+    }
+
+    .mission-inner {
+      width: min(860px, calc(100% - 2rem));
+      margin: 0 auto;
+      padding: clamp(4rem, 8vw, 7rem) 0;
+    }
+
+    .mission h2 {
+      margin-bottom: 1rem;
+      font-size: clamp(2.2rem, 5vw, 4.5rem);
+    }
+
+    .mission p {
+      color: #d1d1d1;
+      font-size: clamp(1rem, 1.5vw, 1.18rem);
+      line-height: 1.78;
+    }
+
+    .mission-note {
+      padding-left: 1rem;
+      border-left: 3px solid rgba(255, 255, 255, 0.4);
+    }
+
+    .site-footer {
+      padding: 1.5rem;
+      background: #000;
+      color: #aaa;
+      text-align: center;
+      font-size: 0.85rem;
+    }
+
+    @media (max-width: 700px) {
+      .slide img {
+        object-fit: cover;
+      }
+
+      .copy {
+        padding-bottom: 8rem;
+      }
+
+      .header-link {
+        display: none;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html {
+        scroll-behavior: auto;
+      }
+
+      .slide {
+        transition: none;
+      }
+    }
+    #visitor-box {
   position: fixed;
   left: 50%;
   bottom: 18px;
@@ -35,13 +315,188 @@
   font: 14px Arial, Helvetica, sans-serif;
   letter-spacing: 0.04em;
   backdrop-filter: blur(4px);
-}
+  }
   </style>
 </head>
+
 <body>
-  <img src="assets/earth.webp"
-       alt="Planet Earth centered on Africa, Europe, and western Asia against space">
-<div id="visitor-box">
+  <header class="site-header">
+    <a class="brand" href="#home">Alkebulan.life</a>
+    <a class="header-link" href="#mission">Our mission</a>
+  </header>
+
+  <main id="home">
+    <section class="slideshow" aria-label="Alkebulan introduction">
+      <!-- Slide 1: change the words below whenever desired. -->
+      <article class="slide is-active" aria-hidden="false">
+        <img src="assets/earth.webp"
+             alt="Planet Earth viewed from space">
+        <div class="copy">
+          <p class="kicker">Alkebulan.life</p>
+          <h1>Unencumbered Communications</h1>
+          <p class="lead">
+            For every soul on Earth—a developing independent home for ideas,
+            learning, culture, and meaningful worldwide conversation.
+          </p>
+          <div class="actions">
+            <a class="button" href="#mission">Enter the vision</a>
+          </div>
+        </div>
+      </article>
+
+      <!-- Slide 2 -->
+      <article class="slide" aria-hidden="true">
+        <img src="assets/earth1.webp"
+             alt="A second visual representing worldwide human connection">
+        <div class="copy">
+          <p class="kicker">Independent by design</p>
+          <h2>Own Your Voice</h2>
+          <p class="lead">
+            Publish under a domain you control, preserve your work, and build
+            direct relationships without depending entirely on one commercial platform.
+          </p>
+          <div class="actions">
+            <a class="button" href="#mission">Why independence matters</a>
+          </div>
+        </div>
+      </article>
+
+      <!-- Slide 3 -->
+      <article class="slide" aria-hidden="true">
+        <img src="assets/image2.webp"
+             alt="A third visual representing communication across borders">
+        <div class="copy">
+          <p class="kicker">Distance is no barrier</p>
+          <h2>Connect Beyond Borders</h2>
+          <p class="lead">
+            A place for individuals, families, educators, communities, and
+            businesses to exchange knowledge with dignity, privacy, and purpose.
+          </p>
+          <div class="actions">
+            <a class="button" href="#mission">Learn about Alkebulan</a>
+          </div>
+        </div>
+      </article>
+
+      <div class="controls" aria-label="Slideshow controls">
+        <button class="control-button previous" type="button" aria-label="Previous image">‹</button>
+
+        <div class="dots" role="tablist" aria-label="Choose an image">
+          <button class="dot" type="button" aria-label="Show image 1" aria-current="true"></button>
+          <button class="dot" type="button" aria-label="Show image 2" aria-current="false"></button>
+          <button class="dot" type="button" aria-label="Show image 3" aria-current="false"></button>
+        </div>
+
+        <button class="control-button next" type="button" aria-label="Next image">›</button>
+        <button class="control-button pause" type="button" aria-label="Pause slideshow">Ⅱ</button>
+      </div>
+    </section>
+
+    <section class="mission" id="mission">
+      <div class="mission-inner">
+        <p class="kicker">The foundation</p>
+        <h2>Our Mission</h2>
+        <p>
+          Alkebulan is being developed to complement existing social platforms
+          while placing greater emphasis on user dignity, privacy, independent
+          publishing, and meaningful worldwide communication.
+        </p>
+        <p class="mission-note">
+          The first stage is a public information and publishing site. Community,
+          federated social, recorded-video, and live-broadcast services can be added
+          later as the audience and technical requirements become clearer.
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    © <span id="year"></span> Alkebulan.life
+  </footer>
+
+  <script>
+    const slides = Array.from(document.querySelectorAll(".slide"));
+    const dots = Array.from(document.querySelectorAll(".dot"));
+    const previousButton = document.querySelector(".previous");
+    const nextButton = document.querySelector(".next");
+    const pauseButton = document.querySelector(".pause");
+
+    let currentIndex = 0;
+    let timerId = null;
+    let isPaused = false;
+    const intervalMilliseconds = 7000;
+
+    function showSlide(index) {
+      currentIndex = (index + slides.length) % slides.length;
+
+      slides.forEach((slide, slideIndex) => {
+        const active = slideIndex === currentIndex;
+        slide.classList.toggle("is-active", active);
+        slide.setAttribute("aria-hidden", String(!active));
+      });
+
+      dots.forEach((dot, dotIndex) => {
+        dot.setAttribute("aria-current", String(dotIndex === currentIndex));
+      });
+    }
+
+    function nextSlide() {
+      showSlide(currentIndex + 1);
+    }
+
+    function startTimer() {
+      stopTimer();
+
+      if (!isPaused && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        timerId = window.setInterval(nextSlide, intervalMilliseconds);
+      }
+    }
+
+    function stopTimer() {
+      if (timerId !== null) {
+        window.clearInterval(timerId);
+        timerId = null;
+      }
+    }
+
+    previousButton.addEventListener("click", () => {
+      showSlide(currentIndex - 1);
+      startTimer();
+    });
+
+    nextButton.addEventListener("click", () => {
+      nextSlide();
+      startTimer();
+    });
+
+    dots.forEach((dot, index) => {
+      dot.addEventListener("click", () => {
+        showSlide(index);
+        startTimer();
+      });
+    });
+
+    pauseButton.addEventListener("click", () => {
+      isPaused = !isPaused;
+      pauseButton.textContent = isPaused ? "▶" : "Ⅱ";
+      pauseButton.setAttribute(
+        "aria-label",
+        isPaused ? "Resume slideshow" : "Pause slideshow"
+      );
+
+      if (isPaused) {
+        stopTimer();
+      } else {
+        startTimer();
+      }
+    });
+
+    document.getElementById("year").textContent = new Date().getFullYear();
+
+    showSlide(0);
+    startTimer();
+  </script>
+  <div id="visitor-box">
   Visitors: <span id="visitor-count">Loading…</span>
 </div>
 
