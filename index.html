@@ -297,6 +297,10 @@
       .header-link {
         display: none;
       }
+
+      .visitor-counter {
+        top: -36px;
+      }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -309,6 +313,8 @@
       }
     }
     .visitor-counter {
+      position: relative;
+      top: -48px; /* approximately one-half inch upward */
       display: inline-flex;
       align-items: center;
       justify-content: center;
@@ -390,7 +396,9 @@
       </article>
 
       <div class="controls" aria-label="Slideshow controls">
-        <button class="control-button previous" type="button" aria-label="Previous image">‹</button>
+        <button class="control-button previous"
+                type="button"
+                aria-label="Previous image">‹</button>
 
         <div class="dots" role="tablist" aria-label="Choose an image">
           <button class="dot" type="button" aria-label="Show image 1" aria-current="true"></button>
@@ -398,19 +406,17 @@
           <button class="dot" type="button" aria-label="Show image 3" aria-current="false"></button>
         </div>
 
-        <button class="control-button next" type="button" aria-label="Next image">›</button>
         <button class="control-button next"
                 type="button"
                 aria-label="Next image">›</button>
-        
+
         <span class="visitor-counter" aria-live="polite">
           Visitors: <span id="visitor-number">—</span>
         </span>
-        
+
         <button class="control-button pause"
                 type="button"
                 aria-label="Pause slideshow">Ⅱ</button>
-        <button class="control-button pause" type="button" aria-label="Pause slideshow">Ⅱ</button>
       </div>
     </section>
 
