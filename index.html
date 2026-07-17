@@ -5,7 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="Alkebulan — Unencumbered Communications for Every Soul on Earth.">
   <title>Alkebulan</title>
-
+  <link rel="canonical" href="https://alkebulan.life/">
+  
   <style>
     :root {
       color-scheme: dark;
@@ -307,6 +308,25 @@
         transition: none;
       }
     }
+    .visitor-counter {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 2.6rem;
+      padding: 0.55rem 0.95rem;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      background: rgba(0, 0, 0, 0.55);
+      color: #fff;
+      font-size: 0.9rem;
+      white-space: nowrap;
+      backdrop-filter: blur(5px);
+    }
+    
+    #visitor-number {
+      margin-left: 0.3rem;
+      font-weight: 700;
+    }
   </style>
 </head>
 
@@ -379,6 +399,17 @@
         </div>
 
         <button class="control-button next" type="button" aria-label="Next image">›</button>
+        <button class="control-button next"
+                type="button"
+                aria-label="Next image">›</button>
+        
+        <span class="visitor-counter" aria-live="polite">
+          Visitors: <span id="visitor-number">—</span>
+        </span>
+        
+        <button class="control-button pause"
+                type="button"
+                aria-label="Pause slideshow">Ⅱ</button>
         <button class="control-button pause" type="button" aria-label="Pause slideshow">Ⅱ</button>
       </div>
     </section>
@@ -486,6 +517,43 @@
 
     showSlide(0);
     startTimer();
+  </script>
+
+  <!-- Record visits in GoatCounter. -->
+  <script
+    data-goatcounter="https://alkebulan.goatcounter.com/count"
+    async
+    src="https://gc.zgo.at/count.js">
+  </script>
+
+  <!-- Display the total number of visits. -->
+  <script>
+    (function () {
+      const visitorNumber =
+        document.getElementById("visitor-number");
+
+      fetch("https://alkebulan.goatcounter.com/counter/TOTAL.json")
+        .then(function (response) {
+          if (!response.ok) {
+            throw new Error(
+              "GoatCounter returned HTTP " + response.status
+            );
+          }
+
+          return response.json();
+        })
+        .then(function (data) {
+          visitorNumber.textContent = data.count || "0";
+        })
+        .catch(function (error) {
+          console.error(
+            "Unable to load GoatCounter total:",
+            error
+          );
+
+          visitorNumber.textContent = "—";
+        });
+    }());
   </script>
 </body>
 </html>
