@@ -301,21 +301,6 @@
         transition: none;
       }
     }
-    #visitor-box {
-  position: fixed;
-  left: 50%;
-  bottom: 18px;
-  transform: translateX(-50%);
-  z-index: 10;
-  padding: 8px 14px;
-  border: 1px solid rgba(255, 255, 255, 0.45);
-  border-radius: 999px;
-  background: rgba(0, 0, 0, 0.65);
-  color: white;
-  font: 14px Arial, Helvetica, sans-serif;
-  letter-spacing: 0.04em;
-  backdrop-filter: blur(4px);
-  }
   </style>
 </head>
 
@@ -496,29 +481,5 @@
     showSlide(0);
     startTimer();
   </script>
-  <div id="visitor-box">
-  Visitors: <span id="visitor-count">Loading…</span>
-</div>
-
-<script
-  data-goatcounter="https://alkebulan.goatcounter.com/count"
-  src="https://gc.zgo.at/count.js">
-</script>
-
-<script>
-  fetch("https://alkebulan.goatcounter.com/counter/TOTAL.json")
-    .then(function (response) {
-      if (!response.ok) {
-        throw new Error("Counter unavailable");
-      }
-      return response.json();
-    })
-    .then(function (data) {
-      document.getElementById("visitor-count").textContent = data.count;
-    })
-    .catch(function () {
-      document.getElementById("visitor-count").textContent = "—";
-    });
-</script>
 </body>
 </html>
